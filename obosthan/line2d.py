@@ -58,6 +58,55 @@ class OLine2D:
         else:
             return None
 
+    def translate(self, x, y):
+        """
+        moves the line in space along X and Y axises by amounts defined by x and y arguments
+        """
+
+        self.__coord[0] = self.__coord[0] + x
+        self.__coord[1] = self.__coord[1] + y
+        self.__coord[2] = self.__coord[2] + x
+        self.__coord[3] = self.__coord[3] + y
+
+    def rotate_centroid(self, angle):
+        """
+        rotates the polygon by degrees about it's centroid
+        """
+
+        old_centroid = (((self.__coord[2]-self.__coord[0])/2)+self.__coord[0], ((self.__coord[3]-self.__coord[1])/2)+self.__coord[1])
+
+        self.translate(-old_centroid[0], -old_centroid[1])
+
+        old_coord_x = self.__coord[0]
+        old_coord_y = self.__coord[1]
+        self.__coord[0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+        self.__coord[1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+        old_coord_x = self.__coord[2]
+        old_coord_y = self.__coord[3]
+        self.__coord[2] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+        self.__coord[3] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+
+        self.translate(old_centroid[0], old_centroid[1])
+
+    def rotate_point(self, angle, point):
+        """
+        rotates the polygon by degrees about a defined point
+        """
+
+        origin = (point[0], point[1])
+        self.translate(-origin[0], -origin[1])
+
+        old_coord_x = self.__coord[0]
+        old_coord_y = self.__coord[1]
+        self.__coord[0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+        self.__coord[1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+        old_coord_x = self.__coord[2]
+        old_coord_y = self.__coord[3]
+        self.__coord[2] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+        self.__coord[3] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+
+        self.translate(origin[0], origin[1])
+
     def __iter__(self):
         return iter(self.__coord)
 
