@@ -45,7 +45,7 @@ class OLine2D:
         """
         returns perpendicular distance to a point
         """
-        if type(point) is OPoint2D or (type(point) is list and len(point) == 2):
+        if type(point) is OPoint2D or ((type(point) is list or type(point) is tuple) and len(point) == 2):
             origin_circle = OPoint2D(point[0] - self.__coord[0], point[1] - self.__coord[1])
             line_vector = OVector2D(0, 0)
             circle_vector = OVector2D(0, 0)
@@ -93,19 +93,67 @@ class OLine2D:
         rotates the polygon by degrees about a defined point
         """
 
-        origin = (point[0], point[1])
-        self.translate(-origin[0], -origin[1])
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
 
-        old_coord_x = self.__coord[0]
-        old_coord_y = self.__coord[1]
-        self.__coord[0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
-        self.__coord[1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
-        old_coord_x = self.__coord[2]
-        old_coord_y = self.__coord[3]
-        self.__coord[2] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
-        self.__coord[3] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+            if len(point) == 2:
 
-        self.translate(origin[0], origin[1])
+                origin = (point[0], point[1])
+                self.translate(-origin[0], -origin[1])
+
+                old_coord_x = self.__coord[0]
+                old_coord_y = self.__coord[1]
+                self.__coord[0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+                self.__coord[1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+                old_coord_x = self.__coord[2]
+                old_coord_y = self.__coord[3]
+                self.__coord[2] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+                self.__coord[3] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+
+                self.translate(origin[0], origin[1])
+
+    def transform(self, matrix):
+        """
+        applies a matrix transformation to the line vectices about it's centroid
+        """
+
+        if type(matrix) is tuple or type(matrix) is list:
+
+            if len(matrix) == 4:
+
+                old_centroid = (((self.__coord[2] - self.__coord[0]) / 2) + self.__coord[0], ((self.__coord[3] - self.__coord[1]) / 2) + self.__coord[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                old_point = (self.__coord[0], self.__coord[1])
+                self.__coord[0] = (old_point[0] * matrix[0]) + (old_point[1] * matrix[1])
+                self.__coord[1] = (old_point[0] * matrix[2]) + (old_point[1] * matrix[3])
+                old_point = (self.__coord[2], self.__coord[3])
+                self.__coord[2] = (old_point[0] * matrix[0]) + (old_point[1] * matrix[1])
+                self.__coord[3] = (old_point[0] * matrix[2]) + (old_point[1] * matrix[3])
+
+                self.translate(old_centroid[0], old_centroid[1])
+
+    def transform_point(self, matrix, point):
+        """
+        applies a matrix transformation to the line vectices about a defined point
+        """
+
+        if (type(matrix) is tuple or type(matrix) is list) and (type(point) is tuple or type(point) is list or type(point) is OPoint2D):
+
+            if len(matrix) == 4 and len(point) == 2:
+
+                old_centroid = (point[0], point[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                old_point = (self.__coord[0], self.__coord[1])
+                self.__coord[0] = (old_point[0] * matrix[0]) + (old_point[1] * matrix[1])
+                self.__coord[1] = (old_point[0] * matrix[2]) + (old_point[1] * matrix[3])
+                old_point = (self.__coord[2], self.__coord[3])
+                self.__coord[2] = (old_point[0] * matrix[0]) + (old_point[1] * matrix[1])
+                self.__coord[3] = (old_point[0] * matrix[2]) + (old_point[1] * matrix[3])
+
+                self.translate(old_centroid[0], old_centroid[1])
 
     def __iter__(self):
         return iter(self.__coord)
