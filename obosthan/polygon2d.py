@@ -340,12 +340,51 @@ class OPolygon:
         returns the area of the polygon as enclosed by it's vertices
         """
 
-        last_index = self.__num_of_points - 1
-        sum = 0
-        for i in range(self.__num_of_points):
-            if (i == last_index):
-                sum += (self.__coord_list[i][0] * self.__coord_list[0][1]) - (self.__coord_list[i][1]*self.__coord_list[0][0])
-            else:
-                sum += (self.__coord_list[i][0] * self.__coord_list[i+1][1]) - (self.__coord_list[i][1] * self.__coord_list[i+1][0])
+        if self.__num_of_points > 2:
 
-        return abs(sum/2)
+            last_index = self.__num_of_points - 1
+            sum = 0
+            for i in range(self.__num_of_points):
+                if (i == last_index):
+                    sum += (self.__coord_list[i][0] * self.__coord_list[0][1]) - (self.__coord_list[i][1]*self.__coord_list[0][0])
+                else:
+                    sum += (self.__coord_list[i][0] * self.__coord_list[i+1][1]) - (self.__coord_list[i][1] * self.__coord_list[i+1][0])
+
+            return abs(sum/2)
+
+        else:
+            return None
+
+    def get_perimeter(self, last_segment=True):
+
+        """
+        returns the perimeter of the polygon as enclosed by it's vertices. The last_segment argument is used to control wheather the last side of the polygon is considered as part of perimeter
+        """
+
+        sides = []
+        p = 0
+
+        if self.__num_of_points > 1:
+
+            if last_segment == False:
+
+                for i in range(self.__num_of_points-1):
+                    sides.append(OLine2D(self.__coord_list[i][0], self.__coord_list[i][1], self.__coord_list[i+1][0], self.__coord_list[i+1][1]))
+                    p += sides[i].length
+
+            else:
+
+                for i in range(self.__num_of_points):
+
+                    if i == (self.num_of_points - 1):
+                        sides.append(OLine2D(self.__coord_list[i][0], self.__coord_list[i][1], self.__coord_list[0][0], self.__coord_list[0][1]))
+                    else:
+                        sides.append(OLine2D(self.__coord_list[i][0], self.__coord_list[i][1], self.__coord_list[i+1][0], self.__coord_list[i+1][1]))
+
+                    p += sides[i].length
+
+            return p
+
+        else:
+            return None
+
