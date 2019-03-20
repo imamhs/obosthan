@@ -155,6 +155,86 @@ class OLine2D:
 
                 self.translate(old_centroid[0], old_centroid[1])
 
+    def scale(self, x, y):
+        """
+        applies a scale transformation to the line vectices about it's centroid
+        """
+
+        old_centroid = (((self.__coord[2] - self.__coord[0]) / 2) + self.__coord[0], ((self.__coord[3] - self.__coord[1]) / 2) + self.__coord[1])
+
+        self.translate(-old_centroid[0], -old_centroid[1])
+
+        old_point = (self.__coord[0], self.__coord[1])
+        self.__coord[0] = (old_point[0] * x) + (old_point[1] * 0)
+        self.__coord[1] = (old_point[0] * 0) + (old_point[1] * y)
+        old_point = (self.__coord[2], self.__coord[3])
+        self.__coord[2] = (old_point[0] * x) + (old_point[1] * 0)
+        self.__coord[3] = (old_point[0] * 0) + (old_point[1] * y)
+
+        self.translate(old_centroid[0], old_centroid[1])
+
+    def scale_point(self, x, y, point):
+        """
+        applies a scale transformation to the line vectices about a defined point
+        """
+
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
+
+            if len(point) == 2:
+
+                old_centroid = (point[0], point[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                old_point = (self.__coord[0], self.__coord[1])
+                self.__coord[0] = (old_point[0] * x) + (old_point[1] * 0)
+                self.__coord[1] = (old_point[0] * 0) + (old_point[1] * y)
+                old_point = (self.__coord[2], self.__coord[3])
+                self.__coord[2] = (old_point[0] * x) + (old_point[1] * 0)
+                self.__coord[3] = (old_point[0] * 0) + (old_point[1] * y)
+
+                self.translate(old_centroid[0], old_centroid[1])
+
+    def shear(self, x, y):
+        """
+        applies a shear transformation to the line vectices about it's centroid
+        """
+
+        old_centroid = (((self.__coord[2] - self.__coord[0]) / 2) + self.__coord[0], ((self.__coord[3] - self.__coord[1]) / 2) + self.__coord[1])
+
+        self.translate(-old_centroid[0], -old_centroid[1])
+
+        old_point = (self.__coord[0], self.__coord[1])
+        self.__coord[0] = (old_point[0] * 1) + (old_point[1] * x)
+        self.__coord[1] = (old_point[0] * y) + (old_point[1] * 1)
+        old_point = (self.__coord[2], self.__coord[3])
+        self.__coord[2] = (old_point[0] * 1) + (old_point[1] * x)
+        self.__coord[3] = (old_point[0] * y) + (old_point[1] * 1)
+
+        self.translate(old_centroid[0], old_centroid[1])
+
+    def shear_point(self, x, y, point):
+        """
+        applies a shear transformation to the line vectices about a defined point
+        """
+
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
+
+            if len(point) == 2:
+
+                old_centroid = (point[0], point[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                old_point = (self.__coord[0], self.__coord[1])
+                self.__coord[0] = (old_point[0] * 1) + (old_point[1] * x)
+                self.__coord[1] = (old_point[0] * y) + (old_point[1] * 1)
+                old_point = (self.__coord[2], self.__coord[3])
+                self.__coord[2] = (old_point[0] * 1) + (old_point[1] * x)
+                self.__coord[3] = (old_point[0] * y) + (old_point[1] * 1)
+
+                self.translate(old_centroid[0], old_centroid[1])
+
     def __iter__(self):
         return iter(self.__coord)
 
