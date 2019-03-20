@@ -18,6 +18,7 @@ class OPolygon:
 	
     def __init__(self, points):
         self.__coord_list = []
+        self.__num_of_points = 0
         self.add_points(points)
         self.__centroid = self.__cal_centroid()
 
@@ -34,21 +35,23 @@ class OPolygon:
 		adds points into the polygon where points must be ordered in clockwise or anti clockwise fashion for correct caculation of the area formed by the polygon vertices
 		"""
 		
-        if type(points) is list:
-            for point in points:
-                self.__coord_list.append(OPoint2D(point[0], point[1]))
-            self.__num_of_points = len(self.__coord_list)
-            self.__centroid = self.__cal_centroid()
+        if type(points) is list or type(points) is tuple:
+            if len(points) > 0:
+                for point in points:
+                    self.__coord_list.append(OPoint2D(point[0], point[1]))
+                self.__num_of_points = len(self.__coord_list)
+                self.__centroid = self.__cal_centroid()
 
     def add_point(self, point):
         """
         adds a single point into the polygon
         """
 		
-        if type(point) is list:
-            self.__coord_list.append(OPoint2D(point[0], point[1]))
-            self.__num_of_points = len(self.__coord_list)
-            self.__centroid = self.__cal_centroid()
+        if type(point) is tuple or type(point) is list:
+            if len(point) == 2:
+                self.__coord_list.append(OPoint2D(point[0], point[1]))
+                self.__num_of_points = len(self.__coord_list)
+                self.__centroid = self.__cal_centroid()
         elif type(point) is OPoint2D:
             self.__coord_list.append(point)
             self.__num_of_points = len(self.__coord_list)
@@ -59,7 +62,7 @@ class OPolygon:
 		creates a new side for the polygon where the side is defined by a line having two end points
 		"""
 		
-        if type(side) is OLine2D or (type(side) is list and len(side) == 4):
+        if type(side) is OLine2D or ((type(side) is list or type(side) is tuple) and len(side) == 4):
             self.__coord_list.append(OPoint2D(side[0], side[1]))
             self.__coord_list.append(OPoint2D(side[2], side[3]))
             self.__num_of_points = len(self.__coord_list)
@@ -70,7 +73,7 @@ class OPolygon:
         removes an existing point from the polygon
         """
 		
-        if type(point) is list:
+        if type(point) is list or type(point) is tuple:
             val = OPoint2D(point[0], point[1])
             if val in self.__coord_list:
                 self.__coord_list.remove(val)
@@ -94,7 +97,7 @@ class OPolygon:
         """
         returns the polygon points
         """
-        return list(self.__coord_list)
+        return tuple(self.__coord_list)
 
     def __iter__(self):
         return iter(self.__coord_list)
@@ -164,24 +167,124 @@ class OPolygon:
         moves the polygon in space along X and Y axises by amounts defined by x and y arguments
         """
 
-        coord_i = 0
-
-        for coord_i in range(self.__num_of_points):
-            self.__coord_list[coord_i][0] = self.__coord_list[coord_i][0] + x
-            self.__coord_list[coord_i][1] = self.__coord_list[coord_i][1] + y
+        for i in range(self.__num_of_points):
+            self.__coord_list[i][0] = self.__coord_list[i][0] + x
+            self.__coord_list[i][1] = self.__coord_list[i][1] + y
 
         self.__centroid = self.__cal_centroid()
 
     def transform(self, matrix):
         """
-        applies a matrix transformation to the polygon vectices
+        applies a matrix transformation to the polygon vectices about it's centroid
         """
 		
-        if type(matrix) is list:
+        if type(matrix) is tuple or type(matrix) is list:
 
             if len(matrix) == 4:
 
                 old_centroid = (self.__centroid[0], self.__centroid[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                for i in range(self.__num_of_points):
+                    old_point = (self.__coord_list[i][0], self.__coord_list[i][1])
+                    self.__coord_list[i][0] = (old_point[0] * matrix[0]) + (old_point[1] * matrix[1])
+                    self.__coord_list[i][1] = (old_point[0] * matrix[2]) + (old_point[1] * matrix[3])
+
+                self.translate(old_centroid[0], old_centroid[1])
+
+                self.__centroid = self.__cal_centroid()
+
+    def scale(self, x, y):
+        """
+        scale the polygon vectices about it's centroid
+        """
+
+        old_centroid = (self.__centroid[0], self.__centroid[1])
+
+        self.translate(-old_centroid[0], -old_centroid[1])
+
+        for i in range(self.__num_of_points):
+            old_point = (self.__coord_list[i][0], self.__coord_list[i][1])
+            self.__coord_list[i][0] = (old_point[0] * x) + (old_point[1] * 0)
+            self.__coord_list[i][1] = (old_point[0] * 0) + (old_point[1] * y)
+
+        self.translate(old_centroid[0], old_centroid[1])
+
+        self.__centroid = self.__cal_centroid()
+
+    def scale_point(self, x, y, point):
+        """
+        scale the polygon vectices about a defined point
+        """
+
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
+
+            if len(point) == 2:
+
+                old_centroid = (point[0], point[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                for i in range(self.__num_of_points):
+                    old_point = (self.__coord_list[i][0], self.__coord_list[i][1])
+                    self.__coord_list[i][0] = (old_point[0] * x) + (old_point[1] * 0)
+                    self.__coord_list[i][1] = (old_point[0] * 0) + (old_point[1] * y)
+
+                self.translate(old_centroid[0], old_centroid[1])
+
+                self.__centroid = self.__cal_centroid()
+
+    def shear(self, x, y):
+        """
+        shear the polygon vectices about it's centroid
+        """
+
+        old_centroid = (self.__centroid[0], self.__centroid[1])
+
+        self.translate(-old_centroid[0], -old_centroid[1])
+
+        for i in range(self.__num_of_points):
+            old_point = (self.__coord_list[i][0], self.__coord_list[i][1])
+            self.__coord_list[i][0] = (old_point[0] * 1) + (old_point[1] * x)
+            self.__coord_list[i][1] = (old_point[0] * y) + (old_point[1] * 1)
+
+        self.translate(old_centroid[0], old_centroid[1])
+
+        self.__centroid = self.__cal_centroid()
+
+    def shear_point(self, x, y, point):
+        """
+        shear the polygon vectices about a defined point
+        """
+
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
+
+            if len(point) == 2:
+
+                old_centroid = (point[0], point[1])
+
+                self.translate(-old_centroid[0], -old_centroid[1])
+
+                for i in range(self.__num_of_points):
+                    old_point = (self.__coord_list[i][0], self.__coord_list[i][1])
+                    self.__coord_list[i][0] = (old_point[0] * 1) + (old_point[1] * x)
+                    self.__coord_list[i][1] = (old_point[0] * y) + (old_point[1] * 1)
+
+                self.translate(old_centroid[0], old_centroid[1])
+
+                self.__centroid = self.__cal_centroid()
+
+    def transform_point(self, matrix, point):
+        """
+        applies a matrix transformation to the polygon vectices about a defined point
+        """
+
+        if (type(matrix) is list or type(matrix) is tuple) and (type(point) is tuple or type(point) is list or type(point) is OPoint2D):
+
+            if len(matrix) == 4 and len(point) == 2:
+
+                old_centroid = (point[0], point[1])
 
                 self.translate(-old_centroid[0], -old_centroid[1])
 
@@ -216,17 +319,21 @@ class OPolygon:
         rotates the polygon by degrees about a defined point
         """
 
-        origin = (point[0], point[1])
-        self.translate(-origin[0], -origin[1])
+        if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
 
-        for coord_i in range(self.__num_of_points):
-            old_coord_x = self.__coord_list[coord_i][0]
-            old_coord_y = self.__coord_list[coord_i][1]
-            self.__coord_list[coord_i][0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
-            self.__coord_list[coord_i][1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+            if len(point) == 2:
 
-        self.translate(origin[0], origin[1])
-        self.__centroid = self.__cal_centroid()
+                origin = (point[0], point[1])
+                self.translate(-origin[0], -origin[1])
+
+                for coord_i in range(self.__num_of_points):
+                    old_coord_x = self.__coord_list[coord_i][0]
+                    old_coord_y = self.__coord_list[coord_i][1]
+                    self.__coord_list[coord_i][0] = (cos(radians(angle)) * old_coord_x) - (sin(radians(angle)) * old_coord_y)
+                    self.__coord_list[coord_i][1] = (sin(radians(angle)) * old_coord_x) + (cos(radians(angle)) * old_coord_y)
+
+                self.translate(origin[0], origin[1])
+                self.__centroid = self.__cal_centroid()
 
     def get_area(self):
         """
