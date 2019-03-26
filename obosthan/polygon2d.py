@@ -9,6 +9,7 @@ polygon object
 from math import cos, sin, radians
 from .point2d import OPoint2D
 from .line2d import OLine2D
+from .vector2d import OVector2D
 
 class OPolygon:
     """
@@ -42,18 +43,13 @@ class OPolygon:
                 self.__num_of_points = len(self.__coord_list)
                 self.__centroid = self.__cal_centroid()
 
-    def add_point(self, point):
+    def add_point(self, _x, _y):
         """
         adds a single point into the polygon
         """
-		
-        if type(point) is tuple or type(point) is list:
-            if len(point) == 2:
-                self.__coord_list.append(OPoint2D(point[0], point[1]))
-                self.__num_of_points = len(self.__coord_list)
-                self.__centroid = self.__cal_centroid()
-        elif type(point) is OPoint2D:
-            self.__coord_list.append(point)
+
+        if _x != None and _y != None:
+            self.__coord_list.append(OPoint2D(_x, _y))
             self.__num_of_points = len(self.__coord_list)
             self.__centroid = self.__cal_centroid()
 
@@ -90,7 +86,7 @@ class OPolygon:
         returns an existing point from the polygon defined by index
         """
 		
-        return self.__coord_list[i]
+        return (self.__coord_list[i][0], self.__coord_list[i][1])
 
     @property
     def coords(self):
