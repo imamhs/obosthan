@@ -1,5 +1,7 @@
+# Copyright (c) 2019, Md Imam Hossain (emamhd at gmail dot com)
+# see LICENSE.txt for details
+
 import pygame
-import math
 import obosthan
 
 frame_count = 0

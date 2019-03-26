@@ -1,9 +1,9 @@
+# Copyright (c) 2019, Md Imam Hossain (emamhd at gmail dot com)
+# see LICENSE.txt for details
+
 import pygame
-import mathutils
-import math
 import obosthan
-import copy
-import math
+
 
 frame_count = 0
 FRAMES_PER_SECOND = 25

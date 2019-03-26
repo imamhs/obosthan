@@ -1,9 +1,8 @@
+# Copyright (c) 2019, Md Imam Hossain (emamhd at gmail dot com)
+# see LICENSE.txt for details
+
 import pygame
-import mathutils
-import math
 import obosthan
-import copy
-import math
 
 frame_count = 0
 FRAMES_PER_SECOND = 25
@@ -19,7 +18,7 @@ pygame.key.set_repeat(1, 10)
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 
-pp = obosthan.OPolygon([[234, 230], [409, 136], [823, 262], [240, 412]])
+pp = obosthan.OPolygon(((329, 154), (661, 181), (545, 280)))
 
 done = False
 pause = False
@@ -39,6 +38,10 @@ while not done:
             if event.key == pygame.K_q:
                 pp.rotate_centroid(5)
                 pp.translate(0.2,0.2)
+            if event.key == pygame.K_a:
+                pp.scale_point(1.1, 1.1, pp.get_point(0))
+            if event.key == pygame.K_d:
+                pp.scale_point(0.9, 0.9, pp.get_point(0))
 
     if pause == False:
 
