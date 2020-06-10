@@ -67,7 +67,7 @@ def oline_circle(line, circle, circle_radius):
 
 def obox2(poly1, poly2):
     """
-    detects axis aligned collision between two polygons 
+    detects axis aligned collision between two polygons' bounding boxes
     """
 
     if len(poly1) != 0 and len(poly2) != 0:
@@ -105,7 +105,7 @@ def obox2(poly1, poly2):
 
 def obox_circle(poly, circle, circle_radius):
     """
-    detects axis aligned collision between a polygon and circle 
+    detects axis aligned collision between a polygon's bounding box and a circle
     """
 
     if len(poly) != 0:
@@ -128,3 +128,72 @@ def obox_circle(poly, circle, circle_radius):
             return False
     else:
         return None
+
+def opoly2(poly1, poly2):
+    """
+    detects collision between two polygons
+    """
+
+    col = 1
+    p1s = len(poly1)
+    p2s = len(poly2)
+
+
+    if p1s != 0 and p2s != 0:
+
+        for i in range(p1s):
+            norm = OPoint2D(0, 0)
+            sm1 = []
+            sm2 = []
+            if i == (p1s-1):
+                norm[0] = -1 * (poly1.coords[0][1] - poly1.coords[i][1])
+                norm[1] = poly1.coords[0][0] - poly1.coords[i][0]
+            else:
+                norm[0] = -1 * (poly1.coords[i + 1][1] - poly1.coords[i][1])
+                norm[1] = poly1.coords[i + 1][0] - poly1.coords[i][0]
+
+            for ii in range(p1s):
+                sm1.append(OVector2D(poly1.coords[ii][0], poly1.coords[ii][1]).dot(norm)/norm.distance)
+            for ii in range(p2s):
+                sm2.append(OVector2D(poly2.coords[ii][0], poly2.coords[ii][1]).dot(norm)/norm.distance)
+
+            mi1 = min(sm1)
+            mx1 = max(sm1)
+            mi2 = min(sm2)
+            mx2 = max(sm2)
+
+            if (mx1 < mi2) or (mi1 > mx2):
+                col = 0
+                break
+
+        if col == 1:
+            for i in range(p2s):
+                norm = OPoint2D(0, 0)
+                sm1 = []
+                sm2 = []
+
+                if i == (p2s - 1):
+                    norm[0] = -1 * (poly2.coords[0][1] - poly2.coords[i][1])
+                    norm[1] = poly2.coords[0][0] - poly2.coords[i][0]
+                else:
+                    norm[0] = -1 * (poly2.coords[i+1][1] - poly2.coords[i][1])
+                    norm[1] = poly2.coords[i+1][0] - poly2.coords[i][0]
+
+                for ii in range(p1s):
+                    sm1.append(OVector2D(poly1.coords[ii][0], poly1.coords[ii][1]).dot(norm) / norm.distance)
+                for ii in range(p2s):
+                    sm2.append(OVector2D(poly2.coords[ii][0], poly2.coords[ii][1]).dot(norm) / norm.distance)
+
+                mi1 = min(sm1)
+                mx1 = max(sm1)
+                mi2 = min(sm2)
+                mx2 = max(sm2)
+
+                if (mx1 < mi2) or (mi1 > mx2):
+                    col = 0
+                    break
+
+    else:
+        col = 0
+
+    return col
