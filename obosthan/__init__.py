@@ -8,3 +8,4 @@ from .collision2d import oline_circle
 from .collision2d import obox2
 from .collision2d import obox_circle
 from .collision2d import opoly2
+from .collision2d import opoly_line

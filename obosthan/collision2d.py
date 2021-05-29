@@ -22,7 +22,7 @@ def ocircle2(circle1, circle1_radius, circle2, circle2_radius):
 
 def oline2(line1, line2):
     """
-    detects collision between two definite lines and returns intersecting points
+    detects collision between two definite lines and returns intersecting point
     """
 
     denominator = ((line1[2] - line1[0]) * (line2[3] - line2[1])) - ((line1[3] - line1[1]) * (line2[2] - line2[0]))
@@ -129,9 +129,25 @@ def obox_circle(poly, circle, circle_radius):
     else:
         return None
 
+def opoly_line(poly, line):
+
+    ps = len(poly)
+
+    if ps > 1:
+        for i in range(ps-1):
+            r = oline2((poly.coords[i][0], poly.coords[i][1], poly.coords[i+1][0], poly.coords[i+1][1]), line)
+            if r != None:
+                return r
+
+        r = oline2((poly.coords[0][0], poly.coords[0][1], poly.coords[ps-1][0], poly.coords[ps-1][1]), line)
+        if r != None:
+            return r
+
+    return None
+
 def opoly2(poly1, poly2):
     """
-    detects collision between two polygons
+    detects collision between two polygons using SAT
     """
 
     col = 1
