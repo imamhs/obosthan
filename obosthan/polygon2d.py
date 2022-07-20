@@ -9,7 +9,6 @@ polygon object
 from math import cos, sin, radians
 from .point2d import OPoint2D
 from .line2d import OLine2D
-from .vector2d import OVector2D
 
 class OPolygon:
     """
