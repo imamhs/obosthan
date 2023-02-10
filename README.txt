@@ -1,5 +1,5 @@
 
-Obosthan (A generic 2d objects spatial abstraction library for Python)
+Obosthan (A generic 2d and 3d objects spatial abstraction library for Python)
 
 --------------------------------------------------------------------------------------
 
