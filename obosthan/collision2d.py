@@ -3,7 +3,7 @@
 
 
 """
-2d collision routines
+2D collision routines
 """
 
 from .point2d import OPoint2D
@@ -12,7 +12,7 @@ from .vector2d import OVector2D
 
 def ocircle2(circle1, circle1_radius, circle2, circle2_radius):
     """
-    detects collision between two circles
+    Detects collision between two circles
     """
 
     if (circle1.distance_to(circle2) <= (circle1_radius+circle2_radius)):
@@ -22,7 +22,7 @@ def ocircle2(circle1, circle1_radius, circle2, circle2_radius):
 
 def oline2(line1, line2):
     """
-    detects collision between two definite lines and returns intersecting point
+    Detects collision between two definite lines and returns intersecting point
     """
 
     denominator = ((line1[2] - line1[0]) * (line2[3] - line2[1])) - ((line1[3] - line1[1]) * (line2[2] - line2[0]))
@@ -39,11 +39,11 @@ def oline2(line1, line2):
     if (t >= 0 and t <= 1) and (u >= 0 and u <= 1):
         return OPoint2D(line1[0] + (t*(line1[2]-line1[0])), line1[1] + (t*(line1[3]-line1[1])))
     else:
-        None
+        return None
 
 def oline_circle(line, circle, circle_radius):
     """
-    detects collision between a line and a circle and returns penetration distance
+    Detects collision between a line and a circle and returns penetration distance
     """
 
     origin_circle = OPoint2D(circle[0]-line[0], circle[1]-line[1])
@@ -67,7 +67,7 @@ def oline_circle(line, circle, circle_radius):
 
 def obox2(poly1, poly2):
     """
-    detects axis aligned collision between two polygons' bounding boxes
+    Detects axis aligned collision between two polygons' bounding boxes
     """
 
     if len(poly1) != 0 and len(poly2) != 0:
@@ -105,7 +105,7 @@ def obox2(poly1, poly2):
 
 def obox_circle(poly, circle, circle_radius):
     """
-    detects axis aligned collision between a polygon's bounding box and a circle
+    Detects axis aligned collision between a polygon's bounding box and a circle
     """
 
     if len(poly) != 0:
@@ -147,7 +147,7 @@ def opoly_line(poly, line):
 
 def opoly2(poly1, poly2):
     """
-    detects collision between two polygons using SAT
+    Detects collision between two polygons using SAT
     """
 
     col = 1

@@ -3,10 +3,10 @@
 
 
 """
-2d line object
+2D line object
 """
 
-from math import hypot, sin, cos, radians, acos, degrees, atan
+from math import sin, cos, radians
 from .point2d import OPoint2D
 from .vector2d import OVector2D
 
@@ -21,7 +21,7 @@ class OLine2D:
         self.__length = self.__cal_length()
 
     def __cal_length(self):
-        return hypot(self.__coord[2]-self.__coord[0], self.__coord[3]-self.__coord[1])
+        return (((self.__coord[2]-self.__coord[0])**2) + ((self.__coord[3]-self.__coord[1])**2))**0.5
 
     @property
     def length(self):
@@ -29,22 +29,23 @@ class OLine2D:
 
     def copy(self):
         """
-        returns a copy of the line object
+        Returns a copy of the line object
         """
 
         return OLine2D(self.__coord[0], self.__coord[1], self.__coord[2], self.__coord[3])
 
     def get_points(self):
         """
-        returns end points of the line as two points in a tuple
+        Returns end points of the line as two points in a tuple
         """
 
         return (OPoint2D(self.__coord[0], self.__coord[1]), OPoint2D(self.__coord[2], self.__coord[3]))
 
     def distance_to_point(self, point):
         """
-        returns perpendicular distance to a point
+        Returns perpendicular distance to a point
         """
+
         if type(point) is OPoint2D or ((type(point) is list or type(point) is tuple) and len(point) == 2):
             origin_circle = OPoint2D(point[0] - self.__coord[0], point[1] - self.__coord[1])
             line_vector = OVector2D(0, 0)
@@ -60,7 +61,7 @@ class OLine2D:
 
     def translate(self, x, y):
         """
-        moves the line in space along X and Y axises by amounts defined by x and y arguments
+        Moves the line in space along X and Y axes by amounts defined by x and y arguments
         """
 
         self.__coord[0] = self.__coord[0] + x
@@ -70,7 +71,7 @@ class OLine2D:
 
     def rotate_centroid(self, angle):
         """
-        rotates the polygon by degrees about it's centroid
+        Rotates the polygon by degrees about it's centroid
         """
 
         old_centroid = (((self.__coord[2]-self.__coord[0])/2)+self.__coord[0], ((self.__coord[3]-self.__coord[1])/2)+self.__coord[1])
@@ -90,7 +91,7 @@ class OLine2D:
 
     def rotate_point(self, angle, point):
         """
-        rotates the polygon by degrees about a defined point
+        Rotates the polygon by degrees about a defined point
         """
 
         if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
@@ -113,7 +114,7 @@ class OLine2D:
 
     def transform(self, matrix):
         """
-        applies a matrix transformation to the line vectices about it's centroid
+        Applies a matrix transformation to the line vertices about it's centroid
         """
 
         if type(matrix) is tuple or type(matrix) is list:
@@ -135,7 +136,7 @@ class OLine2D:
 
     def transform_point(self, matrix, point):
         """
-        applies a matrix transformation to the line vectices about a defined point
+        Applies a matrix transformation to the line vertices about a defined point
         """
 
         if (type(matrix) is tuple or type(matrix) is list) and (type(point) is tuple or type(point) is list or type(point) is OPoint2D):
@@ -157,7 +158,7 @@ class OLine2D:
 
     def scale(self, x, y):
         """
-        applies a scale transformation to the line vectices about it's centroid
+        Applies a scale transformation to the line vertices about it's centroid
         """
 
         old_centroid = (((self.__coord[2] - self.__coord[0]) / 2) + self.__coord[0], ((self.__coord[3] - self.__coord[1]) / 2) + self.__coord[1])
@@ -175,7 +176,7 @@ class OLine2D:
 
     def scale_point(self, x, y, point):
         """
-        applies a scale transformation to the line vectices about a defined point
+        Applies a scale transformation to the line vertices about a defined point
         """
 
         if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
@@ -197,7 +198,7 @@ class OLine2D:
 
     def shear(self, x, y):
         """
-        applies a shear transformation to the line vectices about it's centroid
+        Applies a shear transformation to the line vertices about it's centroid
         """
 
         old_centroid = (((self.__coord[2] - self.__coord[0]) / 2) + self.__coord[0], ((self.__coord[3] - self.__coord[1]) / 2) + self.__coord[1])
@@ -215,7 +216,7 @@ class OLine2D:
 
     def shear_point(self, x, y, point):
         """
-        applies a shear transformation to the line vectices about a defined point
+        Applies a shear transformation to the line vertices about a defined point
         """
 
         if type(point) is tuple or type(point) is list or type(point) is OPoint2D:
@@ -246,8 +247,10 @@ class OLine2D:
             self.__coord[1] = val[1]
             self.__coord[2] = val[2]
             self.__coord[3] = val[3]
+        else:
+            return self
 
-        self.__length = self.__cal_length()
+        self.__length = (((self.__coord[2]-self.__coord[0])**2) + ((self.__coord[3]-self.__coord[1])**2))**0.5
 
     def __getitem__(self, i):
         return self.__coord[i]

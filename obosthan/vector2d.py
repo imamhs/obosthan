@@ -3,7 +3,7 @@
 
 
 """
-2d vector object
+2D vector object
 """
 
 from math import hypot, sin, cos, radians, acos, degrees, atan
@@ -62,14 +62,14 @@ class OVector2D:
 
     def copy(self):
         """
-        returns a copy of the vector object
+        Returns a copy of the vector object
         """
 
         return OVector2D(self.__coord[0], self.__coord[1])
 
     def define_line(self, x1, y1, x2, y2):
         """
-        alters the vector to follow a line as defined by two end points (x1, y1) and (x2, y22)
+        Alters the vector to follow a line as defined by two end points (x1, y1) and (x2, y22)
         """
 
         self.__coord[0] = x2 - x1
@@ -81,7 +81,7 @@ class OVector2D:
 
     def define_polar(self, length, angle):
         """
-        alters the vector to a specified length and angle (degrees)
+        Alters the vector to a specified length and angle (degrees)
         """
 
         self.__coord[0] = length * cos(radians(angle))
@@ -93,7 +93,7 @@ class OVector2D:
 
     def project(self, other):
         """
-        projects another vector and return projected vector
+        Projects another vector and return projected vector
         """
 
         if self.__length != 0:
@@ -105,7 +105,7 @@ class OVector2D:
 
     def angle_to(self, other):
         """
-        finds angle to another vector in degrees
+        Finds angle to another vector in degrees
         """
 
         denominator = self.__length*other.length
@@ -113,12 +113,13 @@ class OVector2D:
             ratio = round(self.dot(other)/denominator, 12)
             return degrees(acos(ratio))
         else:
-            None
+            return None
 
     def rotate(self, angle):
         """
-        rotates the vector to a specified angle in degrees (anticlockwise)
+        Rotates the vector to a specified angle in degrees (anticlockwise)
         """
+
         self.__coord[0] = (cos(radians(angle)) * self.__x_axis[0]) - (sin(radians(angle)) * self.__x_axis[1])
         self.__coord[1] = (sin(radians(angle)) * self.__x_axis[0]) + (cos(radians(angle)) * self.__x_axis[1])
         self.__unit = self.__cal_unit()
@@ -126,8 +127,9 @@ class OVector2D:
 
     def rotate_to(self, angle):
         """
-        rotates the vector by specified angle in degrees (anticlockwise)
+        Rotates the vector by specified angle in degrees (anticlockwise)
         """
+
         xcoord = self.__coord[0]
         ycoord = self.__coord[1]
         self.__coord[0] = (cos(radians(angle)) * xcoord) - (sin(radians(angle)) * ycoord)
@@ -137,16 +139,18 @@ class OVector2D:
 
     def negate(self):
         """
-        negates the vector
+        Negates the vector
         """
+
         self.__coord[0] = -self.__coord[0]
         self.__coord[1] = -self.__coord[1]
         self.__unit = self.__cal_unit()
 
     def scale(self, magnitude):
         """
-        scales the vector by to a speficied factor
+        Scales the vector by to a specified factor
         """
+
         if type(magnitude) is float or type(magnitude) is int:
             self.__coord[0] = self.__coord[0] * magnitude
             self.__coord[1] = self.__coord[1] * magnitude
@@ -155,14 +159,16 @@ class OVector2D:
 
     def ortho_left(self):
         """
-        returns a perpendicular vector
+        Returns a perpendicular vector
         """
+
         return OVector2D(self.__coord[1], -self.__coord[0])
 
     def ortho_right(self):
         """
-        returns a perpendicular vector
+        Returns a perpendicular vector
         """
+
         return OVector2D(-self.__coord[1], self.__coord[0])
 
     def __iter__(self):
@@ -174,6 +180,8 @@ class OVector2D:
         elif type(val) is OVector2D or (type(val) is list and len(val) == 2):
             self.__coord[0] = val[0]
             self.__coord[1] = val[1]
+        else:
+            return self
 
         self.__length = hypot(self.__coord[0], self.__coord[1])
         self.__x_axis = [self.__length, 0]
@@ -195,7 +203,7 @@ class OVector2D:
         elif type(other) is OVector2D or (type(other) is list and len(other) == 2):
             return OVector2D(self.__coord[0]+other[0], self.__coord[1]+other[1])
         else:
-            return None
+            return self
 
     def __sub__(self, other):
         if type(other) is float or type(other) is int:
@@ -203,7 +211,7 @@ class OVector2D:
         elif type(other) is OVector2D or (type(other) is list and len(other) == 2):
             return OVector2D(self.__coord[0]-other[0], self.__coord[1]-other[1])
         else:
-            return None
+            return self
 
     def __neg__(self):
         return OVector2D(-self.__coord[0], -self.__coord[1])
@@ -214,11 +222,13 @@ class OVector2D:
         elif type(other) is OVector2D or (type(other) is list and len(other) == 2):
             return (self.__coord[0]*other[1]) - (self.__coord[1]*other[0])
         else:
-            return None
+            return self
 
     def __truediv__(self, fac):
         if type(fac) is float or type(fac) is int:
             if fac != 0:
                 return OVector2D(self.__coord[0]/fac, self.__coord[1]/fac)
+            else:
+                return self
         else:
-            return None
+            return self

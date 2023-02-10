@@ -3,10 +3,10 @@
 
 
 """
-2d point object
+2D point object
 """
 
-from math import hypot, sin, cos, radians, degrees, atan
+from math import sin, cos, radians, degrees, atan
 
 class OPoint2D:
     """
@@ -22,7 +22,7 @@ class OPoint2D:
         self.__heading = self.__cal_heading()
 
     def __cal_distance(self):
-        return hypot(self.__coord[0], self.__coord[1])
+        return ((self.__coord[0]**2)+(self.__coord[1]**2))**0.5
 
     def __cal_x_axis(self):
         return [self.__distance, 0]
@@ -51,27 +51,27 @@ class OPoint2D:
 
     def copy(self):
         """
-        returns a copy of the object
+        Returns a copy of the object
         """
 
         return OPoint2D(self.__coord[0], self.__coord[1])
 
     def vector_copy(self, vec, distance):
         """
-        returns a new point which follows a vector and maintance a distance from the point
+        Returns a new point which follows a vector and maintains a distance from the point
         """
 
         return OPoint2D(self.__coord[0] + (distance * cos(radians(vec.angle))), self.__coord[1] + (distance * sin(radians(vec.angle))))
 
     def distance_to(self, other):
         """
-        finds distance to another point
+        Finds distance to another point
         """
 
-        if type(other) is list:
-            return hypot(other[0] - self.__coord[0], other[1] - self.__coord[1])
-        elif type(other) is OPoint2D:
-            return hypot(other[0] - self.__coord[0], other[1] - self.__coord[1])
+        if type(other) is list or type(other) is OPoint2D:
+            return ((other[0] - self.__coord[0])**2)+((other[1] - self.__coord[1])**2)
+        else:
+            return None
 
     def __iter__(self):
         return iter(self.__coord)
@@ -85,10 +85,15 @@ class OPoint2D:
         elif type(val) is list:
             self.__coord[0] = val[0]
             self.__coord[1] = val[1]
+        else:
+            return self
 
-        self.__distance = self.__cal_distance()
-        self.__x_axis = self.__cal_x_axis()
+        self.__distance = ((self.__coord[0]**2)+(self.__coord[1]**2))**0.5
+        self.__x_axis = [self.__distance, 0]
         self.__heading = self.__cal_heading()
+
+    def __str__(self):
+        return "X: " + str(self.__coord[0]) + ", Y: " + str(self.__coord[1])
 
     def __getitem__(self, i):
         return self.__coord[i]
@@ -103,13 +108,13 @@ class OPoint2D:
         if type(fac) is float or type(fac) is int:
             return OPoint2D(self.__coord[0] + fac, self.__coord[1] + fac)
         else:
-            return None
+            return self
 
     def __sub__(self, fac):
         if type(fac) is float or type(fac) is int:
             return OPoint2D(self.__coord[0] - fac, self.__coord[1] - fac)
         else:
-            return None
+            return self
 
     def __neg__(self):
         return OPoint2D(-self.__coord[0], -self.__coord[1])
@@ -118,11 +123,13 @@ class OPoint2D:
         if type(fac) is float or type(fac) is int:
             return OPoint2D(self.__coord[0]*fac, self.__coord[1]*fac)
         else:
-            return None
+            return self
 
     def __truediv__(self, fac):
         if type(fac) is float or type(fac) is int:
             if fac != 0:
                 return OPoint2D(self.__coord[0]/fac, self.__coord[1]/fac)
+            else:
+                return self
         else:
-            return None
+            return self
