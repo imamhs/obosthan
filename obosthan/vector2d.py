@@ -6,7 +6,7 @@
 2D vector object
 """
 
-from math import hypot, sin, cos, radians, acos, degrees, atan
+from math import sin, cos, radians, acos, degrees, atan
 
 class OVector2D:
     """
@@ -38,7 +38,7 @@ class OVector2D:
         return [self.__length, 0]
 
     def __cal_length(self):
-        return hypot(self.__coord[0], self.__coord[1])
+        return ((self.__coord[0]**2) + (self.__coord[1]**2))**0.5
 
     def __cal_unit(self):
         if self.__length == 0:
@@ -154,7 +154,7 @@ class OVector2D:
         if type(magnitude) is float or type(magnitude) is int:
             self.__coord[0] = self.__coord[0] * magnitude
             self.__coord[1] = self.__coord[1] * magnitude
-            self.__length = hypot(self.__coord[0], self.__coord[1])
+            self.__length = ((self.__coord[0]**2) + (self.__coord[1]**2))**0.5
             self.__x_axis = [self.__length, 0]
 
     def ortho_left(self):
@@ -183,7 +183,7 @@ class OVector2D:
         else:
             return self
 
-        self.__length = hypot(self.__coord[0], self.__coord[1])
+        self.__length = ((self.__coord[0]**2)+(self.__coord[1]**2))**0.5
         self.__x_axis = [self.__length, 0]
         self.__unit = self.__cal_unit()
         self.__angle = self.__cal_angle()
