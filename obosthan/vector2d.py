@@ -79,6 +79,26 @@ class OVector2D:
         self.__unit = self.__cal_unit()
         self.__angle = self.__cal_angle()
 
+    def define_line1(self, x1, y1, x2, y2):
+        """
+        Alters the vector to follow a line as defined by two end points (x1, y1) and (x2, y22) and always orients the vector in positive direction
+        """
+
+        if x2 > x1:
+            self.__coord[0] = x2 - x1
+        else:
+            self.__coord[0] = x1 - x2
+
+        if y2 > y1:
+            self.__coord[1] = y2 - y1
+        else:
+            self.__coord[1] = y1 - y2
+
+        self.__length = self.__cal_length()
+        self.__x_axis = self.__cal_x_axis()
+        self.__unit = self.__cal_unit()
+        self.__angle = self.__cal_angle()
+
     def define_polar(self, length, angle):
         """
         Alters the vector to a specified length and angle (degrees)
