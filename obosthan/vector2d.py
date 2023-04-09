@@ -130,10 +130,13 @@ class OVector2D:
 
         denominator = self.__length*other.length
         if denominator != 0.0:
-            ratio = round(self.dot(other)/denominator, 12)
-            return degrees(acos(ratio))
+            try:
+                ratio = self.dot(other)/denominator
+                return degrees(acos(ratio))
+            except:
+                return 180.0
         else:
-            return None
+            return 180.0
 
     def rotate(self, angle):
         """
