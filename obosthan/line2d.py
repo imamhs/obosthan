@@ -6,9 +6,8 @@
 2D line object
 """
 
-from math import sin, cos, radians
+from math import sin, cos, radians, dist, sqrt
 from .point2d import OPoint2D
-from .vector2d import OVector2D
 
 class OLine2D:
     """
@@ -46,16 +45,14 @@ class OLine2D:
         Returns perpendicular distance to a point
         """
 
-        if type(point) is OPoint2D or ((type(point) is list or type(point) is tuple) and len(point) == 2):
-            origin_circle = OPoint2D(point[0] - self.__coord[0], point[1] - self.__coord[1])
-            line_vector = OVector2D(0, 0)
-            circle_vector = OVector2D(0, 0)
-            line_vector.define_line(self.__coord[0], self.__coord[1], self.__coord[2], self.__coord[3])
-            circle_vector[0] = origin_circle[0]
-            circle_vector[1] = origin_circle[1]
-            circle_vector_project = line_vector.project(circle_vector)
-            circle_project = OPoint2D(circle_vector_project[0], circle_vector_project[1])
-            return circle_project.distance_to(origin_circle)
+        tri_a = dist((self.__coord[0], self.__coord[1]), point)
+        tri_b = dist((self.__coord[0], self.__coord[1]), (self.__coord[2], self.__coord[3]))
+        tri_c = dist((self.__coord[2], self.__coord[3]), point)
+        semp = (tri_a + tri_b + tri_c) / 2
+        area = sqrt(semp * (semp - tri_a) * (semp - tri_b) * (semp - tri_c))
+
+        if tri_b != 0:
+            return (2 * area) / tri_b
         else:
             return None
 
